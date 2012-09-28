@@ -1,0 +1,130 @@
+
+<audio id="meep" preload>
+   <source src="MeGustasTu.mp3" type='audio/mpeg; codecs="mp3"'>
+</audio>
+
+track1: &nbsp;
+<input type="text" id="track1s" value="10.1">
+<input type="text" id="track1l" value="1.945">
+<input type="button" value="reset" id="track1r">
+<input type="button" value="create loop" id="track1c">
+<input type="button" value="transition to loop1" id="track1">
+
+<br>
+track2: &nbsp;
+<input type="text" id="track2s" value="30.1">
+<input type="text" id="track2l" value="2.48">
+<input type="button" value="reset" id="track2r">
+<input type="button" value="create loop" id="track1c">
+<input type="button" value="transition to loop2" id="track2">
+
+<br>
+Playing: <span id="playing"></span>
+
+<script type="text/javascript" language="javascript" src="AudioLoop.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+	console.log("AudioLoop.");
+	
+	// create + load tracks
+	loop = new AudioLoop()
+	loop.load("loop1", "MeGustasTu.mp3", 10.1, 1.945);	
+	loop2 = new AudioLoop()
+	loop2.load("loop2", "MeGustasTu.mp3", 30.1, 2.48);
+	
+	loop.play();	
+	live = loop;
+	document.getElementById("playing").innerText = loop.name;
+	
+	transition = function(start) {
+		if(!live.playing && !start.playing) return;
+		live.safeStop = true;		
+		(function wait() {
+			if(!live.stopped) {
+				setTimeout(wait, 100); // don't bog it down too hard.
+			} else {
+				live.reset();
+				start.play(); 
+				setTimeout(function(){live.stop();live=start}, 225); // slight overlap.
+			}
+		})();
+		return "transitioning tracks.";
+	}
+	
+	createLoop = function(track, start, length) {
+		var loopname = "loop-" + track + "-" + start + "-" + end;
+		var loop = document.createElement("div");
+		loop.id = loopName;
+		if(!live.playing && !start.playing) return;
+		live.safeStop = true;		
+		(function wait() {
+			if(!live.stopped) {
+				setTimeout(wait, 100); // don't bog it down too hard.
+			} else {
+				live.reset();
+				start.play(); 
+				setTimeout(function(){live.stop();live=start}, 225); // slight overlap.
+			}
+		})();
+		return "transitioning tracks.";
+	}
+	
+	/// misc handlers.
+	checkMouse = function(e) {
+		if(e.keyCode == 37) { //left
+			e.target.value = parseFloat(e.target.value) - 0.1;
+		}
+		if(e.keyCode == 38) { //up
+			e.target.value = parseFloat(e.target.value) + 0.01;
+		}
+		if(e.keyCode == 39) { //right
+			e.target.value = parseFloat(e.target.value) + 0.1;
+		}
+		if(e.keyCode == 40) { //down
+			e.target.value = parseFloat(e.target.value) - 0.01;
+		}
+	}
+	document.getElementById("track1s").addEventListener("keydown", function(e) {
+		checkMouse(e);
+		loop.start = parseFloat(this.value);
+	});	
+	document.getElementById("track1l").addEventListener("keydown", function(e) {
+		checkMouse(e);
+		loop.length = parseFloat(this.value);
+	});		
+	document.getElementById("track1r").addEventListener("click", function() {
+		document.getElementById("track1s").value = loop.start = 10.1;
+		document.getElementById("track1l").value = loop.length = 1.945;
+	});
+	document.getElementById("track2s").addEventListener("keydown", function(e) {
+		checkMouse(e);
+		loop2.start = parseFloat(this.value);
+	});
+	document.getElementById("track2l").addEventListener("keydown", function(e) {
+		checkMouse(e);
+		loop2.length = parseFloat(this.value);
+	});
+	document.getElementById("track2r").addEventListener("click", function() {
+		document.getElementById("track2s").value = loop2.start = 30.1;
+		document.getElementById("track2l").value = loop2.length = 2.48;
+	});
+	
+	document.getElementById("track1c").addEventListener("click", function() {
+		createLoop(track, start, length)
+		document.getElementById("playing").innerText = loop.name;
+	});
+	document.getElementById("track2c").addEventListener("click", function() {
+		transition(loop2);
+		document.getElementById("playing").innerText = loop2.name;
+	});
+	
+	document.getElementById("track1").addEventListener("click", function() {
+		transition(loop);
+		document.getElementById("playing").innerText = loop.name;
+	});
+	document.getElementById("track2").addEventListener("click", function() {
+		transition(loop2);
+		document.getElementById("playing").innerText = loop2.name;
+	});
+};
+</script>

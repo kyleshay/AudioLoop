@@ -1,0 +1,16 @@
+Functions:
+load(name, file, start, length)
+	name - the unique 'name' for the loop
+	file - the audio file to loop
+	start - the start time for the loop
+	length - loop duration
+play()
+stop()
+reset()
+
+Example usage:
+var loop = new AudioLoop()
+loop.load("loop1", "MeGustasTu.mp3", 10.1, 1.945);
+loop.play();
+
+See index.html for examples on how to mix tracks.
